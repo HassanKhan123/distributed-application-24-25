@@ -1,14 +1,11 @@
 package com.example.task1;
 
 public class Product {
-    private final String id;
-    private final String name;
-    private final String price;
-    private final String size;
-    private final String color;
-
-
-
+    private String id;
+    private String name;
+    private String price;
+    private String size;
+    private String color;
 
     public Product(String id, String name, String price, String size, String color) {
         this.id = id;
@@ -39,5 +36,24 @@ public class Product {
         return color;
     }
 
-   
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
 }
