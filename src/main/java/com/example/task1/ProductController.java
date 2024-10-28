@@ -2,28 +2,23 @@
 package com.example.task1;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class ProductController {
 
-    private Map<String, Product> db = new HashMap<>() {
-        {
-            put("1", new Product("1", "test 1", "23", "red", "xl"));
-            put("2", new Product("2", "test 2", "23", "red", "xl"));
-            put("3", new Product("3", "test 3", "23", "red", "xl"));
-            put("4", new Product("4", "test 4", "23", "red", "xl"));
-            put("5", new Product("5", "test 5", "23", "red", "xl"));
+   private final ProductService productService;
 
-        }
-    };
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping("/")
     public String hello() {
@@ -32,13 +27,28 @@ public class ProductController {
 
     @GetMapping("/products")
     public Collection<Product> get() {
-        return db.values();
+        return productService.get();
 
     }
 
+     // Route for filtering by color
+     @GetMapping("/products/filterByColor")
+     public List<Product> getProductsByColor(@RequestParam String color) {
+         return productService.filterProductsByColor(color);
+     }
+ 
+     // Route for filtering by size
+     @GetMapping("/products/filterBySize")
+     public List<Product> getProductsBySize(@RequestParam String size) {
+         return productService.filterProductsBySize(size);
+     }
+ 
+
+    
+
     @GetMapping("/products/{id}")
     public Product get(@PathVariable("id") String id) {
-        Product product = db.get(id);
+        Product product = productService.get(id);
 
         if (product == null)
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -46,4 +56,5 @@ public class ProductController {
         return product;
     }
 
+   
 }
