@@ -1,4 +1,4 @@
-package com.example.task1;
+package com.example.task1.model;
 
 public class Product {
     private String id;

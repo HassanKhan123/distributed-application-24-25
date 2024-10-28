@@ -1,10 +1,12 @@
-package com.example.task1;
+package com.example.task1.services;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
+
+import com.example.task1.model.User;
 
 @Service
 public class UserService {

@@ -1,5 +1,5 @@
 
-package com.example.task1;
+package com.example.task1.controller;
 
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+
+import com.example.task1.model.Product;
+import com.example.task1.services.ProductService;
 
 @RestController
 public class ProductController {

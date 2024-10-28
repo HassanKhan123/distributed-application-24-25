@@ -1,8 +1,8 @@
-package com.example.task1;
+package com.example.task1.services;
 
 import org.springframework.stereotype.Service;
 
-
+import com.example.task1.model.Product;
 
 import java.util.Map;
 import java.util.stream.Collectors;
