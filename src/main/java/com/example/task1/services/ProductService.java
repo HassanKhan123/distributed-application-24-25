@@ -17,11 +17,11 @@ public class ProductService {
 
     private Map<String, Product> db = new HashMap<>() {
         {
-            put("1", new Product("1", "test 1", "23", "xl", "black"));
-            put("2", new Product("2", "test 2", "23", "l", "red"));
-            put("3", new Product("3", "test 3", "23", "m", "blue"));
-            put("4", new Product("4", "test 4", "23", "sm", "green"));
-            put("5", new Product("5", "test 5", "23", "xxl", "pink"));
+            put("1", new Product("1", "Shirt", "200", "xl", "black"));
+            put("2", new Product("2", "Full Sleeves Shirt", "300", "l", "red"));
+            put("3", new Product("3", "Jeans", "350", "m", "blue"));
+            put("4", new Product("4", "Coat", "500", "sm", "green"));
+            put("5", new Product("5", "Half sleeves shirt", "100", "xxl", "pink"));
 
         }
     };

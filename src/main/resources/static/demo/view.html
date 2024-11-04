@@ -22,7 +22,7 @@
     </form>
 
     <h1>Add Product</h1>
-    <form onsubmit="addProduct(event)">
+    <form onsubmit="addProduct(event)" id="productForm">
         <label for="productId">Product ID:</label>
         <input type="text" id="productId" required><br><br>
 
@@ -112,6 +112,7 @@
 
                 const result = await response.text();
                 alert(result);
+                document.getElementById('productForm').reset()
             } catch (error) {
                 console.error('Error:', error);
                 alert('Error adding product');
