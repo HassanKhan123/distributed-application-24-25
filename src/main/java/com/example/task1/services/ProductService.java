@@ -58,16 +58,31 @@ public class ProductService {
         return filteredProducts;
     }
 
-    // public Product save(String fileName, String contentType, byte[] data) {
-    //     Product photo = new Product();
+    public String addProduct(Product product) {
+        if (product.getId() == null || db.containsKey(product.getId())) {
+            return "Invalid product ID or already exists.";
+        }
 
-    //     photo.setId(UUID.randomUUID().toString());
-    //     photo.setFileName(fileName);
-    //     photo.setData(data);
-    //     photo.setContentType(contentType);
-    //     db.put(photo.getId(), photo);
-    //     return photo;
+        db.put(product.getId(), product);
+        return "Product added successfully.";
+    }
 
-    // }
+    public String deleteProduct(String id) {
+        if (db.containsKey(id)) {
+            db.remove(id);
+            return "Product deleted successfully.";
+        } else {
+            return "Product not found.";
+        }
+    }
+
+    public String updateProduct(Product product) {
+        if (product.getId() == null || !db.containsKey(product.getId())) {
+            return "Invalid product ID or product not found.";
+        }
+
+        db.put(product.getId(), product);
+        return "Product updated successfully.";
+    }
 
 }

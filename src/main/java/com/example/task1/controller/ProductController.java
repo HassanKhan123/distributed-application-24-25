@@ -5,8 +5,13 @@ import java.util.Collection;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -57,6 +62,36 @@ public class ProductController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
         return product;
+    }
+
+    @PostMapping("/create-product")
+    public ResponseEntity<String> addProduct(@RequestBody Product product) {
+        String result = productService.addProduct(product);
+        if (result.equals("Product added successfully.")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable String id) {
+        String result = productService.deleteProduct(id);
+        if (result.equals("Product deleted successfully.")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/products")
+    public ResponseEntity<String> updateProduct(@RequestBody Product product) {
+        String result = productService.updateProduct(product);
+        if (result.equals("Product updated successfully.")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
    
