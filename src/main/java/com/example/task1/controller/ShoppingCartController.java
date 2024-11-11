@@ -1,61 +1,46 @@
 package com.example.task1.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.ResponseEntity;
+
 import org.springframework.web.bind.annotation.*;
 
+import com.example.task1.model.AddToCartRequest;
+import com.example.task1.model.CartItemResponse;
 import com.example.task1.model.Product;
-import com.example.task1.model.ShoppingCart;
 import com.example.task1.services.ProductService;
 import com.example.task1.services.ShoppingCartService;
-import org.springframework.web.bind.annotation.RequestBody;
 
-@Controller
-@RequestMapping("/cart")
+@RestController
 public class ShoppingCartController {
 
-    @Autowired
-    private ShoppingCartService shoppingCartService;
-    private ProductService productService;
+    private final ShoppingCartService shoppingCartService;
+    private final ProductService productService;
 
-    // Show the shopping cart
-    @GetMapping
-    public String viewCart(Model model) {
-        model.addAttribute("shoppingCart", shoppingCartService.getShoppingCart());
-        model.addAttribute("cartTotal", shoppingCartService.getCartTotal());
-        return "shoppingCart";
+    public ShoppingCartController(ProductService productService, ShoppingCartService shoppingCartService) {
+        this.productService = productService;
+        this.shoppingCartService = shoppingCartService;
     }
 
-    // Add a product to the cart
-    @PostMapping("/add")
-    public String addProductToCart(@RequestBody ShoppingCart productId) {
-        System.out.println("11111111111111"+productId);
-        // Product product = productService.get(productId);
-        // System.out.println(product);
-        // if (product != null) {
-        //     shoppingCartService.addProductToCart(product, quantity);
-        // }
-        return "Successfully added to cart";
+    @GetMapping("/cart")
+    public ResponseEntity<List<CartItemResponse>> getAllCartItems() {
+        List<CartItemResponse> responseList = shoppingCartService.getAllCartItems().entrySet().stream()
+                .map(entry -> new CartItemResponse(entry.getKey(), entry.getValue()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(responseList);
     }
 
-    // Remove a product from the cart
-    @PostMapping("/remove")
-    public String removeProductFromCart(@RequestParam String productId) {
-        Product product = productService.get(productId);
+    @PostMapping("/cart/add")
+    public ResponseEntity<String> addProductToCart(@RequestBody AddToCartRequest request) {
+
+        Product product = productService.get(request.getProductId());
+
         if (product != null) {
-            shoppingCartService.removeProductFromCart(product);
+            shoppingCartService.addProduct(product, request.getQuantity());
         }
-        return "redirect:/cart";  // Redirect to the cart page
+        return ResponseEntity.ok("Successfully added to cart");
     }
 
-    // Clear the shopping cart
-    @PostMapping("/clear")
-    public String clearCart() {
-        shoppingCartService.clearCart();
-        return "redirect:/cart";  // Redirect to the cart page
-    }
-
-    
 }

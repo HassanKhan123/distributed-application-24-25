@@ -1,37 +1,36 @@
 package com.example.task1.services;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.stereotype.Service;
 
 import com.example.task1.model.Product;
-import com.example.task1.model.ShoppingCart;
 
 @Service
 public class ShoppingCartService {
 
-    private final ShoppingCart shoppingCart = new ShoppingCart();
+    public Map<Product, Integer> products = new HashMap<>();
 
-    // Add a product to the shopping cart
-    public void addProductToCart(Product product, int quantity) {
-        shoppingCart.addProduct(product, quantity);
+    public Map<Product, Integer> getAllCartItems() {
+        return products;
     }
 
-    // Remove a product from the shopping cart
-    public void removeProductFromCart(Product product) {
-        shoppingCart.removeProduct(product);
+    // Add a product to the cart (or update quantity if it exists)
+    public void addProduct(Product product, int quantity) {
+        products.put(product, products.getOrDefault(product, 0) + quantity);
     }
 
-    // Get the shopping cart object (for displaying)
-    public ShoppingCart getShoppingCart() {
-        return shoppingCart;
+    // Calculate the total sum of all products in the cart
+    public double getTotal() {
+        double total = 0;
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            total += Integer.parseInt(product.getPrice()) * quantity;
+        }
+        return total;
     }
 
-    // Get the total sum of the shopping cart
-    public double getCartTotal() {
-        return shoppingCart.getTotal();
-    }
-
-    // Clear the cart
-    public void clearCart() {
-        shoppingCart.clear();
-    }
 }

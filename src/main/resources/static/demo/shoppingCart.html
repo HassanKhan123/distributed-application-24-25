@@ -1,46 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Shopping Cart</title>
-</head>
-<body>
+    <style>
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+    </style>
+    <script>
+      const apiUrl = "http://localhost:9091/cart";
+
+      async function fetchCart() {
+        try {
+          const response = await fetch(apiUrl);
+          const cartItems = await response.json();
+          const tableBody = document.getElementById("cartTableBody");
+          let totalPrice = 0;
+
+          cartItems.forEach((item) => {
+            const { product, quantity } = item;
+            const price = parseFloat(product.price); // Ensure price is parsed as a number
+            totalPrice += price * quantity;
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${product.name}</td>
+               <td>${product.color}</td>
+                <td>${product.size}</td>
+              <td>${price.toFixed(2)}</td>
+              <td>${quantity}</td>
+              <td>${(price * quantity).toFixed(2)}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+
+          // Show total price
+          document.getElementById(
+            "totalPrice"
+          ).textContent = `Total Price: $${totalPrice.toFixed(2)}`;
+        } catch (error) {
+          console.error("Error fetching cart:", error);
+        }
+      }
+
+      // Fetch products when the page loads
+      window.onload = fetchCart;
+    </script>
+  </head>
+  <body>
+    <a href="http://localhost:9091/demo/view.html">Back to Catalog</a>
     <h1>Your Shopping Cart</h1>
-    
     <div>
-        <h2>Cart Items</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Remove</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="entry : ${shoppingCart.products}">
-                    <td th:text="${entry.key.name}"></td>
-                    <td th:text="${entry.key.price}"></td>
-                    <td th:text="${entry.value}"></td>
-                    <td>
-                        <form th:action="@{/cart/remove}" method="post">
-                            <input type="hidden" name="productId" th:value="${entry.key.id}" />
-                            <button type="submit">Remove</button>
-                        </form>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+      <h2>Cart Items</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Product Name</th>
+            <th>Color</th>
+            <th>Size</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody id="cartTableBody">
+          <!-- Cart items will be injected here by JavaScript -->
+        </tbody>
+      </table>
+      <h3 id="totalPrice">Total Price: $0.00</h3>
     </div>
-
-    <h3>Total: <span th:text="${cartTotal}"></span></h3>
-
-   
-
-    <form th:action="@{/cart/clear}" method="post">
-        <button type="submit">Clear Cart</button>
-    </form>
-</body>
+  </body>
 </html>

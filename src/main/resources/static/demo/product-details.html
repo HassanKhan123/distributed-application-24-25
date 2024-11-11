@@ -1,147 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product Details</title>
-    
+
     <style>
         body {
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-    margin: 0;
-    padding: 0;
-}
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
 
-/* Center the product details container */
-.product-details-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-}
+        /* Center the product details container */
+        .product-details-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
 
-/* Product Card Styles */
-.product-card {
-    background-color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    width: 100%;
-    text-align: center;
-}
+        /* Product Card Styles */
+        .product-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
 
-/* Heading */
-#productName {
-    font-size: 28px;
-    font-weight: 600;
-    color: #333;
-}
+        /* Heading */
+        #productName {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+        }
 
-/* Product Info */
-.product-info {
-    margin-top: 20px;
-    font-size: 18px;
-    color: #555;
-}
+        /* Product Info */
+        .product-info {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
+        }
 
-.product-info p {
-    margin: 10px 0;
-}
+        .product-info p {
+            margin: 10px 0;
+        }
 
-/* Button Styling */
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
+        /* Button Styling */
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
 
-button:hover {
-    background-color: #2980b9;
-}
+        button:hover {
+            background-color: #2980b9;
+        }
 
-button:focus {
-    outline: none;
-}
+        button:focus {
+            outline: none;
+        }
     </style>
 
     <script>
 
-const urlParams = new URLSearchParams(window.location.search);
-const productId = urlParams.get('id');  // Get the 'id' from the query string
+        const urlParams = new URLSearchParams(window.location.search);
+        const productId = urlParams.get('id');  // Get the 'id' from the query string
 
-// Check if productId exists in the URL
-if (!productId) {
-    alert('Product ID is missing!');
-    window.location.href = 'index.html'; // Redirect to the main product list page
-}
-
-// Function to fetch product details from the API
-async function fetchProductDetails(productId) {
-    try {
-        // Make an API request to fetch product details
-        const response = await fetch(`http://localhost:9091/products/${productId}`);
-        
-        if (!response.ok) {
-            throw new Error('Product not found');
+        // Check if productId exists in the URL
+        if (!productId) {
+            alert('Product ID is missing!');
+            window.location.href = 'index.html'; // Redirect to the main product list page
         }
-        
-        // Parse the JSON response
-        const product = await response.json();
-        
-        // Display the product details
-        document.getElementById('productId').innerText = product.id;
 
-        document.getElementById('productName').innerText = product.name;
-        document.getElementById('productPrice').innerText = `$${product.price}`;
-        document.getElementById('productSize').innerText = product.size;
-        document.getElementById('productColor').innerText = product.color;
-        
-        // Optionally, you can show more details like description or image if available
-        // For now, it's just name, price, size, and color
-    } catch (error) {
-        console.error('Error fetching product details:', error);
-        document.getElementById('productCard').innerHTML = `
+        // Function to fetch product details from the API
+        async function fetchProductDetails(productId) {
+            try {
+                // Make an API request to fetch product details
+                const response = await fetch(`http://localhost:9091/products/${productId}`);
+
+                if (!response.ok) {
+                    throw new Error('Product not found');
+                }
+
+                // Parse the JSON response
+                const product = await response.json();
+
+                // Display the product details
+                document.getElementById('productId').innerText = product.id;
+
+                document.getElementById('productName').innerText = product.name;
+                document.getElementById('productPrice').innerText = `$${product.price}`;
+                document.getElementById('productSize').innerText = product.size;
+                document.getElementById('productColor').innerText = product.color;
+
+                // Optionally, you can show more details like description or image if available
+                // For now, it's just name, price, size, and color
+            } catch (error) {
+                console.error('Error fetching product details:', error);
+                document.getElementById('productCard').innerHTML = `
             <h1>Product Not Found</h1>
             <p>The product you are looking for does not exist.</p>
             <button id="backButton">Back to Product List</button>
         `;
-    }
-}
+            }
+        }
 
-// Call the fetchProductDetails function to load the data on page load
-fetchProductDetails(productId);
+        // Call the fetchProductDetails function to load the data on page load
+        fetchProductDetails(productId);
 
-async function addToCart(){
-    const productId = document.getElementById('productId').innerText;
+        async function addToCart() {
+            const productId = document.getElementById('productId').innerText;
 
-    const cart = { productId,quantity:1};
+            const cart = { productId, quantity: 1 };
 
-    const response = await fetch(`http://localhost:9091/cart/add`,{
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(cart)
-                });
-    console.log(response)
+            const response = await fetch(`http://localhost:9091/cart/add`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(cart)
+            });
 
-}
+            
 
-function navigate(){
-window.location.href='http://localhost:9091/demo/product.html'
-}
+            if (response.ok) {
+                alert("Product Added to cart");
+                window.location.href = 'http://localhost:9091/demo/shoppingCart.html'
+            }
+
+        }
+
+        function navigate() {
+            window.location.href = 'http://localhost:9091/demo/product.html'
+        }
 
     </script>
 </head>
+
 <body>
     <div class="product-details-container">
         <div class="product-card" id="productCard">
@@ -157,6 +165,7 @@ window.location.href='http://localhost:9091/demo/product.html'
         </div>
     </div>
 
-    
+
 </body>
+
 </html>
