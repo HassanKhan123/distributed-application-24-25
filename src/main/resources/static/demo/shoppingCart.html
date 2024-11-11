@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+</head>
+<body>
+    <h1>Your Shopping Cart</h1>
+    
+    <div>
+        <h2>Cart Items</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="entry : ${shoppingCart.products}">
+                    <td th:text="${entry.key.name}"></td>
+                    <td th:text="${entry.key.price}"></td>
+                    <td th:text="${entry.value}"></td>
+                    <td>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="productId" th:value="${entry.key.id}" />
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h3>Total: <span th:text="${cartTotal}"></span></h3>
+
+   
+
+    <form th:action="@{/cart/clear}" method="post">
+        <button type="submit">Clear Cart</button>
+    </form>
+</body>
+</html>

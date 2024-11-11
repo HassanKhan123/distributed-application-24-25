@@ -98,6 +98,8 @@ async function fetchProductDetails(productId) {
         const product = await response.json();
         
         // Display the product details
+        document.getElementById('productId').innerText = product.id;
+
         document.getElementById('productName').innerText = product.name;
         document.getElementById('productPrice').innerText = `$${product.price}`;
         document.getElementById('productSize').innerText = product.size;
@@ -118,6 +120,25 @@ async function fetchProductDetails(productId) {
 // Call the fetchProductDetails function to load the data on page load
 fetchProductDetails(productId);
 
+async function addToCart(){
+    const productId = document.getElementById('productId').innerText;
+
+    const cart = { productId,quantity:1};
+
+    const response = await fetch(`http://localhost:9091/cart/add`,{
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cart)
+                });
+    console.log(response)
+
+}
+
+function navigate(){
+window.location.href='http://localhost:9091/demo/product.html'
+}
 
     </script>
 </head>
@@ -126,11 +147,13 @@ fetchProductDetails(productId);
         <div class="product-card" id="productCard">
             <h1 id="productName">Loading...</h1>
             <div class="product-info" id="productInfo">
+                <p style="display: none;"> <span id="productId"></p>
                 <p><strong>Price:</strong> <span id="productPrice">Loading...</span></p>
                 <p><strong>Size:</strong> <span id="productSize">Loading...</span></p>
                 <p><strong>Color:</strong> <span id="productColor">Loading...</span></p>
             </div>
-            <button id="backButton" onclick="window.history.back()">Back to Product List</button>
+            <button id="backButton" onclick="addToCart()">Add To Cart</button>
+            <button id="backButton" onclick="navigate()">Back to Product List</button>
         </div>
     </div>
 
