@@ -58,13 +58,13 @@ public class ProductService {
         return filteredProducts;
     }
 
-    public String addProduct(Product product) {
+    public Product addProduct(Product product) {
         if (product.getId() == null || db.containsKey(product.getId())) {
-            return "Invalid product ID or already exists.";
+            return null;
         }
 
         db.put(product.getId(), product);
-        return "Product added successfully.";
+        return product;
     }
 
     public String deleteProduct(String id) {

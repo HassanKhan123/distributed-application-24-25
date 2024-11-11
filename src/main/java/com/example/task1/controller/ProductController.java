@@ -65,12 +65,14 @@ public class ProductController {
     }
 
     @PostMapping("/create-product")
-    public ResponseEntity<String> addProduct(@RequestBody Product product) {
-        String result = productService.addProduct(product);
-        if (result.equals("Product added successfully.")) {
-            return ResponseEntity.ok(result);
+    public ResponseEntity<Product> addProduct(@RequestBody Product product) {
+        Product newProduct = productService.addProduct(product);
+        if (newProduct.getId() != null && !newProduct.getId().isEmpty()) {
+            // Return 200 OK with the created product if ID is valid
+            return ResponseEntity.ok(newProduct);
         } else {
-            return ResponseEntity.badRequest().body(result);
+            // Return 400 Bad Request if the ID is invalid (product creation failed)
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
