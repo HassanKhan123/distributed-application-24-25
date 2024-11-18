@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User List</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+
+      .container {
+        width: 80%;
+        margin: auto;
+      }
+
+      h1 {
+        text-align: center;
+        color: #333;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: #4caf50;
+        color: white;
+      }
+
+      tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      .action-btn {
+        padding: 5px 10px;
+        color: white;
+        background-color: #007bff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .action-btn:hover {
+        background-color: #0056b3;
+      }
+
+      .delete-btn {
+        background-color: #dc3545;
+      }
+
+      .delete-btn:hover {
+        background-color: #c82333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Users List</h1>
+
+      <table id="userTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Users will be dynamically added here by JavaScript -->
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // Fetch users from the API
+      async function fetchUsers() {
+        try {
+          const response = await fetch("http://localhost:9091/users"); // Adjust the API URL as needed
+          if (response.ok) {
+            const users = await response.json();
+            renderUsers(users); // Render the users into the table
+          } else {
+            console.error("Error fetching users:", response.statusText);
+          }
+        } catch (error) {
+          console.error("Error:", error);
+        }
+      }
+
+      // Function to render users into the table
+      function renderUsers(users) {
+        const userTableBody = document.querySelector("#userTable tbody");
+        userTableBody.innerHTML = ""; // Clear existing rows
+
+        users.forEach((user, index) => {
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+               <td>${index + 1}</td>
+                <td>${user.name}</td>
+                <td>${user.email}</td>
+                
+            `;
+          userTableBody.appendChild(row);
+        });
+      }
+
+      // Fetch users when the page loads
+      window.onload = fetchUsers;
+    </script>
+  </body>
+</html>
