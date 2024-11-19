@@ -3,6 +3,7 @@ package com.example.task1.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
@@ -34,13 +35,18 @@ public class ShoppingCartController {
 
     @PostMapping("/cart/add")
     public ResponseEntity<String> addProductToCart(@RequestBody AddToCartRequest request) {
+        try {
 
-        Product product = productService.get(request.getProductId());
+            Product product = productService.get(request.getProductId());
 
-        if (product != null) {
-            shoppingCartService.addProduct(product, request.getQuantity());
+            if (product != null) {
+                shoppingCartService.addProduct(product, request.getQuantity());
+            }
+            return ResponseEntity.ok("Successfully added to cart");
+        } catch (Exception e) {
+            // TODO: handle exception
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        return ResponseEntity.ok("Successfully added to cart");
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.task1.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.task1.model.Product;
@@ -10,10 +11,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Collection;
 
-
 // @Component
 @Service
 public class ProductService {
+
+    private final InventoryService inventoryService;
+
+    @Autowired
+    public ProductService(InventoryService inventoryService) {
+        this.inventoryService = inventoryService;
+    }
 
     private Map<String, Product> db = new HashMap<>() {
         {
@@ -63,7 +70,10 @@ public class ProductService {
             return null;
         }
 
+        inventoryService.addStockForProductId(product.getId(), 2);
+
         db.put(product.getId(), product);
+
         return product;
     }
 

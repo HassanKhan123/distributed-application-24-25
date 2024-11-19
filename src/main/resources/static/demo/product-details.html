@@ -74,7 +74,27 @@
         }
     </style>
 
-    <script>
+   
+</head>
+
+<body>
+    <div class="product-details-container">
+        <div class="product-card" id="productCard">
+            <h1 id="productName">Loading...</h1>
+            <div class="product-info" id="productInfo">
+                <p style="display: none;"> <span id="productId"></p>
+                <p><strong>Price:</strong> <span id="productPrice">Loading...</span></p>
+                <p><strong>Size:</strong> <span id="productSize">Loading...</span></p>
+                <p><strong>Color:</strong> <span id="productColor">Loading...</span></p>
+                 <p><strong>Stock:</strong> <span id="productStock">Loading...</span></p>
+            </div>
+            <button id="backButton" onclick="addToCart()">Add To Cart</button>
+            <button id="backButton" onclick="navigate()">Back to Product List</button>
+        </div>
+    </div>
+
+
+     <script>
 
         const urlParams = new URLSearchParams(window.location.search);
         const productId = urlParams.get('id');  // Get the 'id' from the query string
@@ -96,15 +116,19 @@
                 }
 
                 // Parse the JSON response
-                const product = await response.json();
+                const productData = await response.json();
+
+                console.log(productData)
 
                 // Display the product details
-                document.getElementById('productId').innerText = product.id;
+                document.getElementById('productId').innerText = productData.product.id;
 
-                document.getElementById('productName').innerText = product.name;
-                document.getElementById('productPrice').innerText = `$${product.price}`;
-                document.getElementById('productSize').innerText = product.size;
-                document.getElementById('productColor').innerText = product.color;
+                document.getElementById('productName').innerText = productData.product.name;
+                document.getElementById('productPrice').innerText = `$${productData.product.price}`;
+                document.getElementById('productSize').innerText = productData.product.size;
+                document.getElementById('productColor').innerText = productData.product.color;
+                document.getElementById('productStock').innerText = productData.stock === 0 ? "Out of stock" : productData.stock;
+
 
                 // Optionally, you can show more details like description or image if available
                 // For now, it's just name, price, size, and color
@@ -122,23 +146,30 @@
         fetchProductDetails(productId);
 
         async function addToCart() {
-            const productId = document.getElementById('productId').innerText;
-
-            const cart = { productId, quantity: 1 };
-
-            const response = await fetch(`http://localhost:9091/cart/add`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(cart)
-            });
-
-            
-
-            if (response.ok) {
-                alert("Product Added to cart");
-                window.location.href = 'http://localhost:9091/demo/shoppingCart.html'
+            try {
+                
+                const productId = document.getElementById('productId').innerText;
+    
+                const cart = { productId, quantity: 1 };
+    
+                const response = await fetch(`http://localhost:9091/cart/add`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(cart)
+                });
+    
+                console.log(response)
+                
+    
+                if (response.ok) {
+                    alert("Product Added to cart");
+                    window.location.href = 'http://localhost:9091/demo/shoppingCart.html'
+                }
+            } catch (error) {
+                console.log(error)
+                alert("Something went wrong")
             }
 
         }
@@ -148,22 +179,6 @@
         }
 
     </script>
-</head>
-
-<body>
-    <div class="product-details-container">
-        <div class="product-card" id="productCard">
-            <h1 id="productName">Loading...</h1>
-            <div class="product-info" id="productInfo">
-                <p style="display: none;"> <span id="productId"></p>
-                <p><strong>Price:</strong> <span id="productPrice">Loading...</span></p>
-                <p><strong>Size:</strong> <span id="productSize">Loading...</span></p>
-                <p><strong>Color:</strong> <span id="productColor">Loading...</span></p>
-            </div>
-            <button id="backButton" onclick="addToCart()">Add To Cart</button>
-            <button id="backButton" onclick="navigate()">Back to Product List</button>
-        </div>
-    </div>
 
 
 </body>
