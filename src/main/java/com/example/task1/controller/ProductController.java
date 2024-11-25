@@ -45,20 +45,20 @@ public class ProductController {
 
     }
 
-    // Route for filtering by color
-    @GetMapping("/products/filterByColor")
-    public List<Product> getProductsByColor(@RequestParam String color) {
-        return productService.filterProductsByColor(color);
-    }
+    // // Route for filtering by color
+    // @GetMapping("/products/filterByColor")
+    // public List<Product> getProductsByColor(@RequestParam String color) {
+    // return productService.filterProductsByColor(color);
+    // }
 
-    // Route for filtering by size
-    @GetMapping("/products/filterBySize")
-    public List<Product> getProductsBySize(@RequestParam String size) {
-        return productService.filterProductsBySize(size);
-    }
+    // // Route for filtering by size
+    // @GetMapping("/products/filterBySize")
+    // public List<Product> getProductsBySize(@RequestParam String size) {
+    // return productService.filterProductsBySize(size);
+    // }
 
     @GetMapping("/products/{id}")
-    public ProductDetailDTO get(@PathVariable("id") String id) {
+    public ProductDetailDTO get(@PathVariable("id") Long id) {
         ProductDetailDTO productDetailDTO = productDetailFacade.getProductDetail(id);
 
         if (productDetailDTO == null)
@@ -70,17 +70,13 @@ public class ProductController {
     @PostMapping("/create-product")
     public ResponseEntity<Product> addProduct(@RequestBody Product product) {
         Product newProduct = productService.addProduct(product);
-        if (newProduct.getId() != null && !newProduct.getId().isEmpty()) {
-            // Return 200 OK with the created product if ID is valid
-            return ResponseEntity.ok(newProduct);
-        } else {
-            // Return 400 Bad Request if the ID is invalid (product creation failed)
-            return ResponseEntity.badRequest().body(null);
-        }
+
+        return ResponseEntity.ok(newProduct);
+
     }
 
     @DeleteMapping("/products/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable String id) {
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         String result = productService.deleteProduct(id);
         if (result.equals("Product deleted successfully.")) {
             return ResponseEntity.ok(result);

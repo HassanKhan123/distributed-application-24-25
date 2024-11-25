@@ -123,10 +123,10 @@
                 // Display the product details
                 document.getElementById('productId').innerText = productData.product.id;
 
-                document.getElementById('productName').innerText = productData.product.name;
-                document.getElementById('productPrice').innerText = `$${productData.product.price}`;
-                document.getElementById('productSize').innerText = productData.product.size;
-                document.getElementById('productColor').innerText = productData.product.color;
+                document.getElementById('productName').innerText = productData.product.productName;
+                document.getElementById('productPrice').innerText = `$${productData.product.productPrice}`;
+                document.getElementById('productSize').innerText = productData.product.productSize;
+                document.getElementById('productColor').innerText = productData.product.productColor;
                 document.getElementById('productStock').innerText = productData.stock === 0 ? "Out of stock" : productData.stock;
 
 

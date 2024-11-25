@@ -1,64 +1,71 @@
 package com.example.task1.services;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.task1.model.Inventory;
+import com.example.task1.model.Product;
+import com.example.task1.repository.InventoryRepository;
+import com.example.task1.repository.ProductRepository;
 
 @Service
 public class InventoryService {
 
-    // Map to store stock count for each product ID, initialized once.
-    private final Map<String, Integer> inventory;
+    private final InventoryRepository inventoryRepository;
+    private final ProductRepository productRepository;
 
-    public InventoryService() {
+    @Autowired
+    public InventoryService(InventoryRepository inventoryRepository, ProductRepository productRepository) {
+        this.inventoryRepository = inventoryRepository;
+        this.productRepository = productRepository;
+    }
 
-        inventory = new HashMap<>();
-        inventory.put("1", 100);
-        inventory.put("2", 100);
-        inventory.put("3", 100);
-        inventory.put("4", 100);
-        inventory.put("5", 100);
+    // Method to get all stock values
+    public List<Inventory> getStocks() {
+        return inventoryRepository.findAll();
     }
 
     // Method to get the stock count for a product ID
-    public Collection getStocks() {
-        System.out.println("Current inventory keys: " + inventory.keySet());
-        return inventory.values(); // Default to 0 if no stock is found
-    }
-
-    // Method to get the stock count for a product ID
-    public int getStockForProductId(String productId) {
-
-        System.out.println("Current inventory keys: " + inventory.keySet());
-        return inventory.get(productId); // Default to 0 if no stock is found
+    public int getStockForProductId(Long productId) {
+        return inventoryRepository.findByProductId(productId)
+                .map(Inventory::getStock)
+                .orElse(0); // Default to 0 if product is not found
     }
 
     // Method to reduce the stock for a product ID
-    public boolean reduceStockForProductId(String productId, int quantity) {
-        int currentStock = getStockForProductId(productId);
-        if (currentStock >= quantity) {
-            inventory.put(productId, currentStock - quantity); // Reduce stock
-            System.out.println("Updated inventory values: " + inventory.values());
-            return true; // Success
-        }
-        return false; // Not enough stock to reduce
+    public boolean reduceStockForProductId(Long productId, int quantity) {
+        return inventoryRepository.findByProductId(productId).map(inventory -> {
+            if (inventory.getStock() >= quantity) {
+                inventory.setStock(inventory.getStock() - quantity);
+                inventoryRepository.save(inventory);
+                System.out.println("Reduced stock for product ID: " + productId);
+                return true; // Success
+            }
+            return false; // Not enough stock
+        }).orElse(false); // Product not found
     }
 
-    // Method to increase stock (optional, for restocking products)
-    public void increaseStockForProductId(String productId, int quantity) {
-        inventory.put(productId, getStockForProductId(productId) + quantity);
+    // Method to increase stock (for restocking products)
+    public void increaseStockForProductId(Long productId, int quantity) {
+        inventoryRepository.findByProductId(productId).ifPresent(inventory -> {
+            inventory.setStock(inventory.getStock() + quantity);
+            inventoryRepository.save(inventory);
+            System.out.println("Increased stock for product ID: " + productId);
+        });
     }
 
     // Method to add new stock for a product ID
-    public String addStockForProductId(String productId, int quantity) {
-        if (inventory.containsKey(productId)) {
-            return "Product already exists. Use increaseStockForProductId to add more.";
+    public String addStockForProductId(Long productId, int quantity) {
+        if (inventoryRepository.existsByProductId(productId)) {
+            return "Stock already exists. Use increaseStockForProductId to add more.";
         }
-        System.out.println("Adding new stock for product ID: " + productId);
-        inventory.put(productId, quantity);
-        System.out.println("Updated inventory keys after adding: " + inventory.keySet());
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new IllegalArgumentException("Product not found with ID: " + productId));
+        Inventory inventory = new Inventory(product, quantity);
+        inventoryRepository.save(inventory);
+        System.out.println("Stock added for product ID: " + productId);
         return "Stock Added";
     }
 }

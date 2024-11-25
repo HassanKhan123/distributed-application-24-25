@@ -19,7 +19,7 @@ public class ProductDetailFacade {
     }
 
     // Method to fetch product details along with stock info
-    public ProductDetailDTO getProductDetail(String productId) {
+    public ProductDetailDTO getProductDetail(Long productId) {
         Product product = productService.get(productId); // Get product info from ProductService
         System.out.println("ProductDetailDTO");
         System.out.println(inventoryService.getStocks());

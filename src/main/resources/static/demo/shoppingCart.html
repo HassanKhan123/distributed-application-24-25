@@ -32,14 +32,14 @@
 
           cartItems.forEach((item) => {
             const { product, quantity } = item;
-            const price = parseFloat(product.price); // Ensure price is parsed as a number
+            const price = parseFloat(product.productPrice); // Ensure price is parsed as a number
             totalPrice += price * quantity;
 
             const row = document.createElement("tr");
             row.innerHTML = `
-              <td>${product.name}</td>
-               <td>${product.color}</td>
-                <td>${product.size}</td>
+              <td>${product.productName}</td>
+               <td>${product.productColor}</td>
+                <td>${product.productSize}</td>
               <td>${price.toFixed(2)}</td>
               <td>${quantity}</td>
               <td>${(price * quantity).toFixed(2)}</td>

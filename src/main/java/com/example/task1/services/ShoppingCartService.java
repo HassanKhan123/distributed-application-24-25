@@ -35,11 +35,11 @@ public class ShoppingCartService {
 
                 inventoryService.reduceStockForProductId(product.getId(), 1);
             } else {
-                throw new Exception("No stock left for product ID: " + product.getName());
+                throw new Exception("No stock left for product ID: " + product.getProductName());
             }
         } catch (Exception e) {
             // TODO: handle exception
-            throw new Exception("No stock left for product ID: " + product.getName());
+            throw new Exception("No stock left for product ID: " + product.getProductName());
         }
     }
 
@@ -49,7 +49,7 @@ public class ShoppingCartService {
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
-            total += Integer.parseInt(product.getPrice()) * quantity;
+            total += Integer.parseInt(product.getProductPrice()) * quantity;
         }
         return total;
     }

@@ -4,10 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.task1.model.Product;
+import com.example.task1.repository.InventoryRepository;
+import com.example.task1.repository.ProductRepository;
 
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Collection;
 
@@ -16,82 +15,71 @@ import java.util.Collection;
 public class ProductService {
 
     private final InventoryService inventoryService;
+    private final ProductRepository productRepository;
+    private final InventoryRepository inventoryRepository;
 
     @Autowired
-    public ProductService(InventoryService inventoryService) {
+    public ProductService(InventoryService inventoryService, ProductRepository productRepository,
+            InventoryRepository inventoryRepository) {
         this.inventoryService = inventoryService;
+        this.productRepository = productRepository;
+        this.inventoryRepository = inventoryRepository;
     }
-
-    private Map<String, Product> db = new HashMap<>() {
-        {
-            put("1", new Product("1", "Shirt", "200", "xl", "black"));
-            put("2", new Product("2", "Full Sleeves Shirt", "300", "l", "red"));
-            put("3", new Product("3", "Jeans", "350", "m", "blue"));
-            put("4", new Product("4", "Coat", "500", "sm", "green"));
-            put("5", new Product("5", "Half sleeves shirt", "100", "xxl", "pink"));
-
-        }
-    };
 
     public Collection<Product> get() {
-        return db.values();
+        return productRepository.findAll();
     }
 
-    public Product get(String id) {
+    public Product get(Long id) {
 
-        return db.get(id);
+        return productRepository.findById(id).orElse(null);
     }
 
-    public Product remove(String id) {
+    public void remove(Long id) {
 
-        return db.remove(id);
+        productRepository.deleteById(id);
     }
 
-    public List<Product> filterProductsByColor(String color) {
-        System.out.println("Filtering by color: " + color); // Debug
-        List<Product> filteredProducts = db.values().stream()
-                .filter(product -> product.getColor().equalsIgnoreCase(color))
-                .collect(Collectors.toList());
-        System.out.println("Filtered products: " + filteredProducts); // Debug
-        return filteredProducts;
-    }
+    // public List<Product> filterProductsByColor(String color) {
+    // System.out.println("Filtering by color: " + color); // Debug
+    // List<Product> filteredProducts =
+    // productRepository.findByColorIgnoreCase(color);
+    // System.out.println("Filtered products: " + filteredProducts); // Debug
+    // return filteredProducts;
+    // }
 
-    public List<Product> filterProductsBySize(String size) {
-        System.out.println("Filtering by size: " + size); // Debug
-        List<Product> filteredProducts = db.values().stream()
-                .filter(product -> product.getSize().equalsIgnoreCase(size))
-                .collect(Collectors.toList());
-        System.out.println("Filtered products: " + filteredProducts); // Debug
-        return filteredProducts;
-    }
+    // public List<Product> filterProductsBySize(String size) {
+    // System.out.println("Filtering by size: " + size); // Debug
+    // List<Product> filteredProducts =
+    // productRepository.findBySizeIgnoreCase(size);
+    // System.out.println("Filtered products: " + filteredProducts); // Debug
+    // return filteredProducts;
+    // }
 
     public Product addProduct(Product product) {
-        if (product.getId() == null || db.containsKey(product.getId())) {
-            return null;
-        }
 
-        inventoryService.addStockForProductId(product.getId(), 2);
-
-        db.put(product.getId(), product);
+        Product newProduct = productRepository.save(product);
+        inventoryService.addStockForProductId(newProduct.getId(), 2);
 
         return product;
     }
 
-    public String deleteProduct(String id) {
-        if (db.containsKey(id)) {
-            db.remove(id);
-            return "Product deleted successfully.";
-        } else {
-            return "Product not found.";
-        }
+    public String deleteProduct(Long id) {
+        inventoryRepository.findByProductId(
+                id)
+                .ifPresent(inventory -> inventoryRepository.delete(inventory));
+
+        // Then delete the product
+        productRepository.deleteById(id);
+        productRepository.deleteById(id);
+
+        return "Product deleted successfully.";
+
     }
 
     public String updateProduct(Product product) {
-        if (product.getId() == null || !db.containsKey(product.getId())) {
-            return "Invalid product ID or product not found.";
-        }
 
-        db.put(product.getId(), product);
+        productRepository.save(product);
         return "Product updated successfully.";
     }
 

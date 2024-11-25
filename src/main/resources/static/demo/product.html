@@ -19,13 +19,13 @@
             productItem.innerHTML = `
                         <strong>
                             <a href="http://localhost:9091/demo/product-details.html?id=${product.id}">
-                            ${product.name}
+                            ${product.productName}
                             </a>
                             </strong>
 
                         <div>
                             <button onclick="deleteProduct('${product.id}')">Delete</button>
-                        <button onclick="populateUpdateForm('${product.id}', '${product.name}', '${product.price}', '${product.size}', '${product.color}')">Update</button>
+                        <button onclick="populateUpdateForm('${product.id}', '${product.productName}', '${product.productPrice}', '${product.productSize}', '${product.productColor}')">Update</button>
                             </div>
                         
                     `;
@@ -65,12 +65,18 @@
       async function updateProduct(event) {
         event.preventDefault();
         const id = document.getElementById("updateId").value;
-        const name = document.getElementById("updateName").value;
-        const price = document.getElementById("updatePrice").value;
-        const size = document.getElementById("updateSize").value;
-        const color = document.getElementById("updateColor").value;
+        const productName = document.getElementById("updateName").value;
+        const productPrice = document.getElementById("updatePrice").value;
+        const productSize = document.getElementById("updateSize").value;
+        const productColor = document.getElementById("updateColor").value;
 
-        const product = { id, name, price, size, color };
+        const product = {
+          id,
+          productName,
+          productPrice,
+          productSize,
+          productColor,
+        };
 
         try {
           const response = await fetch(`${apiUrl}`, {

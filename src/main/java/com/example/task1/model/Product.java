@@ -1,59 +1,72 @@
 package com.example.task1.model;
 
-public class Product {
-    private String id;
-    private String name;
-    private String price;
-    private String size;
-    private String color;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
-    public Product(String id, String name, String price, String size, String color) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.size = size;
-        this.color = color;
+@Entity
+@Table(name = "products")
+public class Product {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String productName;
+    private String productPrice;
+    private String productSize;
+    private String productColor;
+
+    public Product() {
+    }
+
+    public Product(String productName, String productPrice, String productSize, String productColor) {
+
+        this.productName = productName;
+        this.productPrice = productPrice;
+        this.productSize = productSize;
+        this.productColor = productColor;
 
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public String getName() {
-        return name;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getPrice() {
-        return price;
+    public String getProductPrice() {
+        return productPrice;
     }
 
-    public String getSize() {
-        return size;
+    public String getProductSize() {
+        return productSize;
     }
 
-    public String getColor() {
-        return color;
+    public String getProductColor() {
+        return productColor;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setProductPrice(String productPrice) {
+        this.productPrice = productPrice;
     }
 
-    public void setSize(String size) {
-        this.size = size;
+    public void setProductSize(String productSize) {
+        this.productSize = productSize;
     }
 
-    public void setColor(String color) {
-        this.color = color;
+    public void setProductColor(String productColor) {
+        this.productColor = productColor;
     }
 
 }
