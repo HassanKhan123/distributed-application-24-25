@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
     // // Additional custom queries can be added here if needed.
-    // List<Product> findByColorIgnoreCase(String productColor);
+    List<Product> findByProductColorIgnoreCase(String productColor);
 
     // List<Product> findBySizeIgnoreCase(String productSize);
 }

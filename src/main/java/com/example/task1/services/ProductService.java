@@ -40,13 +40,12 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    // public List<Product> filterProductsByColor(String color) {
-    // System.out.println("Filtering by color: " + color); // Debug
-    // List<Product> filteredProducts =
-    // productRepository.findByColorIgnoreCase(color);
-    // System.out.println("Filtered products: " + filteredProducts); // Debug
-    // return filteredProducts;
-    // }
+    public List<Product> filterProductsByColor(String color) {
+        System.out.println("Filtering by color: " + color); // Debug
+        List<Product> filteredProducts = productRepository.findByProductColorIgnoreCase(color);
+        System.out.println("Filtered products: " + filteredProducts); // Debug
+        return filteredProducts;
+    }
 
     // public List<Product> filterProductsBySize(String size) {
     // System.out.println("Filtering by size: " + size); // Debug

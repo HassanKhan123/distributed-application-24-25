@@ -7,6 +7,36 @@
     <script>
       const apiUrl = "http://localhost:9091/products";
 
+      async function fetchProductsByColor(color) {
+        try {
+          const apiUrl = `http://localhost:9091/products/filterByColor?color=${color}`;
+          const response = await fetch(apiUrl);
+          const products = await response.json();
+          const productList = document.getElementById("productList");
+          productList.innerHTML = "";
+
+          products.forEach((product) => {
+            const productItem = document.createElement("div");
+            productItem.innerHTML = `
+                        <strong>
+                            <a href="http://localhost:9091/demo/product-details.html?id=${product.id}">
+                            ${product.productName}
+                            </a>
+                            </strong>
+
+                        <div>
+                            <button onclick="deleteProduct('${product.id}')">Delete</button>
+                        <button onclick="populateUpdateForm('${product.id}', '${product.productName}', '${product.productPrice}', '${product.productSize}', '${product.productColor}')">Update</button>
+                            </div>
+                        
+                    `;
+            productList.appendChild(productItem);
+          });
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      }
+
       async function fetchProducts() {
         try {
           const response = await fetch(apiUrl);
@@ -300,6 +330,13 @@
       <a href="http://localhost:9091/demo/view.html">Back</a>
 
       <h2>Available Products</h2>
+    </section>
+
+    <section>
+      <button onclick="fetchProducts()">All</button>
+      <button onclick="fetchProductsByColor('black')">Black</button>
+      <button onclick="fetchProductsByColor('red')">Red</button>
+      <button onclick="fetchProductsByColor('blue')">Blue</button>
     </section>
 
     <section>
