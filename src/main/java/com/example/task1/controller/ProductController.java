@@ -45,6 +45,11 @@ public class ProductController {
 
     }
 
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String name) {
+        return productService.searchProductsByName(name);
+    }
+
     // Route for filtering by color
     @GetMapping("/products/filterByColor")
     public List<Product> getProductsByColor(@RequestParam String color) {

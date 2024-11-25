@@ -55,6 +55,12 @@ public class ProductService {
     // return filteredProducts;
     // }
 
+    public List<Product> searchProductsByName(String name) {
+        return productRepository.searchByProductNameStartingWith(name); // or use searchByNameStartingWith(name) if
+                                                                        // using
+        // @Query
+    }
+
     public Product addProduct(Product product) {
 
         Product newProduct = productRepository.save(product);
