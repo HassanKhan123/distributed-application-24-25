@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Product Details</title>
+  </head>
+  <body>
+    <h1>Product Details</h1>
+    <p><strong>Name:</strong> <span th:text="${product.productName}"></span></p>
+    <p>
+      <strong>Price:</strong>
+      <span th:text="${product.productPrice} + ' €'"></span>
+    </p>
+    <p><strong>Size:</strong> <span th:text="${product.productSize}"></span></p>
+    <p>
+      <strong>Color:</strong> <span th:text="${product.productColor}"></span>
+    </p>
+    <a href="/catalog-paginated">Back to Catalog</a>
+  </body>
+</html>

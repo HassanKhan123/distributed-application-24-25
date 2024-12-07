@@ -17,7 +17,16 @@ repositories {
 	mavenCentral()
 }
 
+tasks.javadoc {
+    options.encoding = 'UTF-8'
+    options.charSet = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

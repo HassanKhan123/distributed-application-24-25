@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shopping App</title>
+  </head>
+  <body>
+    <header>
+      <h1>Shopping App</h1>
+      <a th:href="@{/demo/product.html}">Products</a>
+      <a th:href="@{/demo/users.html}">Users</a>
+      <a th:href="@{/demo/shoppingCart.html}">Cart</a>
+    </header>
+
+    <section>
+      <h1>Create a New User</h1>
+      <form th:action="@{/users}" th:method="post" id="userForm">
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            th:field="*{name}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            th:field="*{email}"
+            required
+          />
+        </div>
+
+        <button type="submit">Submit</button>
+      </form>
+    </section>
+
+    <section>
+      <h1>Add Product</h1>
+      <form th:action="@{/create-product}" th:method="post" id="productForm">
+        <div class="form-group">
+          <label for="productName">Product Name:</label>
+          <input
+            type="text"
+            id="productName"
+            name="productName"
+            th:field="*{productName}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="productPrice">Price:</label>
+          <input
+            type="text"
+            id="productPrice"
+            name="productPrice"
+            th:field="*{productPrice}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="productSize">Size:</label>
+          <input
+            type="text"
+            id="productSize"
+            name="productSize"
+            th:field="*{productSize}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="productColor">Color:</label>
+          <input
+            type="text"
+            id="productColor"
+            name="productColor"
+            th:field="*{productColor}"
+            required
+          />
+        </div>
+
+        <button type="submit">Add Product</button>
+      </form>
+    </section>
+
+    <script th:inline="javascript">
+      document
+        .getElementById("userForm")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          const name = document.getElementById("name").value;
+          const email = document.getElementById("email").value;
+
+          if (!name || !email) {
+            alert("Name and Email cannot be empty.");
+            return;
+          }
+
+          fetch("http://localhost:9091/users", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, email }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("User created:", data);
+              alert("User created successfully!");
+              document.getElementById("userForm").reset();
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              alert("An error occurred. Please try again.");
+            });
+        });
+
+      async function addProduct(event) {
+        event.preventDefault();
+
+        const productName = document.getElementById("productName").value;
+        const productPrice = document.getElementById("productPrice").value;
+        const productSize = document.getElementById("productSize").value;
+        const productColor = document.getElementById("productColor").value;
+
+        const product = {
+          productName,
+          productPrice,
+          productSize,
+          productColor,
+        };
+
+        try {
+          const response = await fetch("http://localhost:9091/create-product", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(product),
+          });
+
+          if (response.ok) {
+            const result = await response.json();
+            document.getElementById("productForm").reset();
+            window.location.href =
+              /*[[@{/demo/product-details.html}]]*/ +"?id=" + result.id;
+          }
+        } catch (error) {
+          console.error("Error:", error);
+          alert("Error adding product");
+        }
+      }
+    </script>
+  </body>
+</html>

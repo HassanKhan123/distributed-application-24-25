@@ -10,44 +10,93 @@ import com.example.task1.model.Product;
 import com.example.task1.repository.InventoryRepository;
 import com.example.task1.repository.ProductRepository;
 
+/**
+ * Service class for managing inventory operations in the system.
+ * 
+ * <p>
+ * Dependencies:
+ * <ul>
+ * <li>{@link InventoryRepository}: Manages inventory-related database
+ * operations.</li>
+ * <li>{@link ProductRepository}: Provides access to product data for inventory
+ * management.</li>
+ * </ul>
+ * </p>
+ * 
+ * <p>
+ * Provides:
+ * <ul>
+ * <li>CRUD operations for inventory data.</li>
+ * <li>Stock management for products, including adding, reducing, and checking
+ * stock levels.</li>
+ * </ul>
+ * </p>
+ */
 @Service
 public class InventoryService {
 
     private final InventoryRepository inventoryRepository;
     private final ProductRepository productRepository;
 
+    /**
+     * Constructs a new instance of {@code InventoryService}.
+     *
+     * @param inventoryRepository the repository for inventory-related operations
+     * @param productRepository   the repository for product-related operations
+     */
     @Autowired
     public InventoryService(InventoryRepository inventoryRepository, ProductRepository productRepository) {
         this.inventoryRepository = inventoryRepository;
         this.productRepository = productRepository;
     }
 
-    // Method to get all stock values
+    /**
+     * Retrieves a list of all inventory records.
+     *
+     * @return a list of all inventory items in the system
+     */
     public List<Inventory> getStocks() {
         return inventoryRepository.findAll();
     }
 
-    // Method to get the stock count for a product ID
+    /**
+     * Retrieves the stock count for a specific product ID.
+     *
+     * @param productId the ID of the product
+     * @return the stock count for the specified product, or 0 if not found
+     */
     public int getStockForProductId(Long productId) {
         return inventoryRepository.findByProductId(productId)
                 .map(Inventory::getStock)
-                .orElse(0); // Default to 0 if product is not found
+                .orElse(0);
     }
 
-    // Method to reduce the stock for a product ID
+    /**
+     * Reduces the stock for a specific product ID by a given quantity.
+     *
+     * @param productId the ID of the product
+     * @param quantity  the quantity to reduce from the stock
+     * @return {@code true} if stock was successfully reduced; {@code false} if
+     *         insufficient stock or product not found
+     */
     public boolean reduceStockForProductId(Long productId, int quantity) {
         return inventoryRepository.findByProductId(productId).map(inventory -> {
             if (inventory.getStock() >= quantity) {
                 inventory.setStock(inventory.getStock() - quantity);
                 inventoryRepository.save(inventory);
                 System.out.println("Reduced stock for product ID: " + productId);
-                return true; // Success
+                return true;
             }
-            return false; // Not enough stock
-        }).orElse(false); // Product not found
+            return false;
+        }).orElse(false);
     }
 
-    // Method to increase stock (for restocking products)
+    /**
+     * Increases the stock for a specific product ID by a given quantity.
+     *
+     * @param productId the ID of the product
+     * @param quantity  the quantity to add to the stock
+     */
     public void increaseStockForProductId(Long productId, int quantity) {
         inventoryRepository.findByProductId(productId).ifPresent(inventory -> {
             inventory.setStock(inventory.getStock() + quantity);
@@ -56,7 +105,20 @@ public class InventoryService {
         });
     }
 
-    // Method to add new stock for a product ID
+    /**
+     * Adds new stock for a specific product ID.
+     *
+     * <p>
+     * If the stock already exists, a message is returned recommending the use of
+     * {@link #increaseStockForProductId(Long, int)} to add more stock.
+     * </p>
+     *
+     * @param productId the ID of the product
+     * @param quantity  the quantity of stock to add
+     * @return a success message or an error message if stock already exists
+     * @throws IllegalArgumentException if the product with the specified ID does
+     *                                  not exist
+     */
     public String addStockForProductId(Long productId, int quantity) {
         if (inventoryRepository.existsByProductId(productId)) {
             return "Stock already exists. Use increaseStockForProductId to add more.";
